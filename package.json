@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev": "viteburner"
+  },
+  "devDependencies": {
+    "vite": "^4.1.4",
+    "viteburner": "^0.5.3"
+  }
+}
