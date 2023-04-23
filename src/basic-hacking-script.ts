@@ -10,11 +10,11 @@ export async function main(ns: NS) {
       let weakenedBy = await ns.weaken(target);
       ns.print("INFO: " + target + " was weakened by " + weakenedBy); 
     } else if (ns.getServerMoneyAvailable(target) < moneyThreshold) {
-      let grownBy = await ns.grow(target) - 1 * 100;
+      let grownBy = (await ns.grow(target) - 1) * 100;
       let securityLevel = ns.getServerSecurityLevel(target);
       ns.print("INFO: " + target + "'s money was grown by " + grownBy + "% (Security: " + securityLevel + ")");
     } else {
-      let moneyStolen = await ns.hack;
+      let moneyStolen = await ns.hack(target);
       ns.print("INFO: Money stolen from " + target + ": " + moneyStolen);      
     }
   }
