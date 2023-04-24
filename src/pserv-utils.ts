@@ -1,7 +1,16 @@
 import { NS } from '../NetscriptDefinitions';
 
 export async function main(ns: NS) {
+    const ram = await ns.prompt("What size servers would you like to purchase?", { type: "text" });
+    const amount = await ns.prompt("How many servers would you like to purchase?", { type: "text" });
 
+    const playerMoney = ns.getServerMoneyAvailable("home");
+    const costOfServers = (ns.getPurchasedServerCost(+ram) * +amount)
+    if (playerMoney < costOfServers) {
+        ns.tprint("WARN: You cannot afford to purchase the servers! (" + playerMoney + " < " + costOfServers + ")");
+    } else {
+        purchaseServers(ns, +ram, +amount);
+    }
 }
 
 /**
