@@ -14,11 +14,22 @@ export async function main(ns: NS) {
  */
 function getNetwork(ns: NS, root: string = "home", visited:string[] = []): string[] {
     ns.scan(root)
-    .filter(host => !visited.includes(host))
-    .forEach(host => {
-        visited.push(host);
-        getNetwork(ns, host, visited);
+    .filter(server => !visited.includes(server))
+    .forEach(server => {
+        visited.push(server);
+        getNetwork(ns, server, visited);
     })
 
     return visited;
+}
+
+/**
+ * Checks for the ram of a specific server.
+ * 
+ * @param {NS} ns - The Netscript API.
+ * @param {string} server - The name of the server to check the ram for.
+ * @returns {number} The amount of ram a server has.
+ */
+function getServerRam(ns: NS, server: string): number {
+    return ns.getServerMaxRam(server);
 }
