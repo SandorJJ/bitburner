@@ -20,7 +20,7 @@ export async function main(ns: NS) {
  * @param {number} ram - The size of the server to purchase.
  * @param {number} amount - The number of servers to purchase.
  */
-function purchaseServers(ns: NS, ram: number, amount: number): void {
+export function purchaseServers(ns: NS, ram: number, amount: number): void {
     for (let i = 0; i < amount; i++) {
         ns.purchaseServer("pserv", ram);
     }
@@ -33,7 +33,7 @@ function purchaseServers(ns: NS, ram: number, amount: number): void {
  * @param {number} ram - The size to upgrade servers by.
  * @param {string[]} pservs - The list of the purchased servers to upgrade.
  */
-function upgradePurchasedServers(ns:NS, ram: number, pservs: string[]): void {
+export function upgradePurchasedServers(ns:NS, ram: number, pservs: string[]): void {
     for (let i = 0; i < pservs.length; i++) {
         ns.upgradePurchasedServer(pservs[i], ram)
     }
@@ -46,7 +46,7 @@ function upgradePurchasedServers(ns:NS, ram: number, pservs: string[]): void {
  * @param {number} amount - The number of servers to check the price for.
  * @returns {number} The cost to purchase the servers.
  */
-function purchasedServersCost(ns: NS, ram: number, amount: number): number {
+export function purchasedServersCost(ns: NS, ram: number, amount: number): number {
     return ns.getPurchasedServerCost(ram) * amount;
 }
 
@@ -57,7 +57,7 @@ function purchasedServersCost(ns: NS, ram: number, amount: number): number {
  * @param {number} pservs - The list of purchased servers to check to price for.
  * @returns {number} The cost to uprade the purchased servers.
  */
-function purchasedServersUpgradeCost(ns: NS, ram: number, pservs: string[]): number {
+export function purchasedServersUpgradeCost(ns: NS, ram: number, pservs: string[]): number {
     let cost = 0;
     for (let i = 0; i < pservs.length; i++) {
         cost += ns.getPurchasedServerUpgradeCost(pservs[i], ram);
