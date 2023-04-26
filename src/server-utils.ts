@@ -58,7 +58,7 @@ export function compromiseServer(ns: NS, server: string): number {
         ns.httpworm(server);
     }
 
-    if (ns.fileExists("SQLInject")) {
+    if (ns.fileExists("SQLInject.exe")) {
         ns.sqlinject(server);
     }
     
