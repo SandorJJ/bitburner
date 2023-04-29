@@ -12,11 +12,11 @@ export async function main(ns: NS) {
  * @param {string[]} visited - The list of servers that have been visited.
  * @returns {string[]} An array of all the servers.
  */
-export function getNetwork(ns: NS, root: string = "home", visited:string[] = []): string[] {
+export function getNetwork(ns: NS, root: string = "home", visited:string[] = ["home"]): string[] {
     ns.scan(root)
     .filter(server => !visited.includes(server))
     .forEach(server => {
-        visited.push(server);
+        visited.push(server);  
         getNetwork(ns, server, visited);
     })
 
