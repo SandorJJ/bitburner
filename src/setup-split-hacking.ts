@@ -29,12 +29,12 @@ export async function main(ns: NS) {
             ns.exec(script, serverWithRam, threads, hackableServer);
             threadsLeft -= threads;
 
-            if (serverRamAvailable < scriptRam) {
+            if ((ns.getServerMaxRam(serverWithRam) - ns.getServerUsedRam(serverWithRam)) < scriptRam) {
                 serversWithRam.shift();
             }
 
-            if (threads === 0) {
-                return;
+            if (threadsLeft === 0) {
+                break;
             }
         }
     }
