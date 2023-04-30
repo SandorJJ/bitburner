@@ -14,7 +14,6 @@ export async function main(ns: NS) {
     }
     const threadsPerServer = Math.floor(totalRam / scriptRam / hackableServers.length);
 
-
     for (const hackableServer of hackableServers) {
         let threadsLeft = threadsPerServer;
 
@@ -22,16 +21,16 @@ export async function main(ns: NS) {
             let serverRamAvailable = ns.getServerMaxRam(serverWithRam) - ns.getServerUsedRam(serverWithRam);
             let threads = Math.floor(serverRamAvailable / scriptRam);
 
+            if (threads === 0) {
+                continue;
+            }
+
             if (threadsLeft < threads) {
                 threads = threadsLeft;
             }
             
             ns.exec(script, serverWithRam, threads, hackableServer);
             threadsLeft -= threads;
-
-            if ((ns.getServerMaxRam(serverWithRam) - ns.getServerUsedRam(serverWithRam)) < scriptRam) {
-                serversWithRam.shift();
-            }
 
             if (threadsLeft === 0) {
                 break;
