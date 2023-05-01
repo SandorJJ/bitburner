@@ -30,8 +30,8 @@ export async function main(ns: NS) {
             }
             
             ns.exec(script, serverWithRam, threads, hackableServer);
+            
             threadsLeft -= threads;
-
             if (threadsLeft === 0) {
                 break;
             }
