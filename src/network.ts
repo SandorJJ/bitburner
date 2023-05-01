@@ -27,7 +27,7 @@ export function getNetwork(ns: NS, root: string = "home", visited:string[] = ["h
  * Returns all of the servers that have RAM.
  * 
  * @param {NS} ns - The Netscript API. 
- * @returns {string[]} An array of all of the servers that have RAM.
+ * @returns {string[]} Returns an array of all of the servers that have RAM.
  */
 export function getNetworkWithRam(ns: NS): string[] {
     return getNetwork(ns).filter((server) => ns.getServerMaxRam(server) > 0);
@@ -37,8 +37,19 @@ export function getNetworkWithRam(ns: NS): string[] {
  * Returns all of the servers that have money.
  * 
  * @param {NS} ns - The Netscript API. 
- * @returns {string[]} An array of all of the servers with money.
+ * @returns {string[]} Returns an array of all of the servers with money.
  */
 export function getNetworkWithMoney(ns: NS): string[] {
     return getNetwork(ns).filter((server) => ns.getServerMaxMoney(server) > 0);
+}
+
+
+/**
+ * Returns all of the servers that have running scripts.
+ * 
+ * @param {NS} ns - The Netscript API.
+ * @returns {string[]} Returns an array of all of the servers with running scripts.
+ */
+export function getNetworkWithScripts(ns: NS): string[] {
+    return getNetwork(ns).filter((server) => ns.getServerUsedRam(server) > 0);
 }
