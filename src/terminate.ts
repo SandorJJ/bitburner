@@ -12,6 +12,6 @@ export async function main(ns: NS) {
  * @param {NS} ns - The Netscript API.
  * @param {string[]} servers - An array of servers to kill scripts on, default: all servers with running scripts.
  */
-export function killAllScripts(ns: NS, servers: string[] = getNetworkWithScripts(ns)): void {
+export function killScripts(ns: NS, servers: string[] = getNetworkWithScripts(ns)): void {
     servers.forEach((server: string) => ns.killall(server, true));
 }
