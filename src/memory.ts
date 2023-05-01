@@ -5,12 +5,12 @@ export async function main(ns: NS) {
 }
 
 /**
- * Checks for the ram of a specific server.
+ * Returns the amount of RAM that is available on a server.
  * 
  * @param {NS} ns - The Netscript API.
- * @param {string} server - The name of the server to check the ram for.
- * @returns {number} The amount of ram a server has.
+ * @param {string} server - The name of the server to check the RAM for.
+ * @returns The amount of ram the server has.
  */
-export function getServerRam(ns: NS, server: string): number {
-    return ns.getServerMaxRam(server);
+export function getServerRamAvailable(ns: NS, server: string): number {
+    return ns.getServerMaxRam(server) - ns.getServerUsedRam(server);
 }
