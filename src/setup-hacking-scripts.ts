@@ -1,5 +1,5 @@
 import { NS } from '../NetscriptDefinitions';
-import { getNetwork } from './server-utils';
+import { getNetwork } from './network';
 
 export async function main(ns: NS) {
     const target = ns.args[0];

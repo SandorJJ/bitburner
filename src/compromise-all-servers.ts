@@ -1,5 +1,6 @@
 import { NS } from "../NetscriptDefinitions";
-import { getNetwork, compromiseServer } from "./server-utils";
+import { getNetwork } from "./network";
+import { compromiseServer } from "./compromise"
 
 export async function main(ns: NS) {
     const servers = getNetwork(ns)
