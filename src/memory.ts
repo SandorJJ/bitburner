@@ -1,7 +1,14 @@
 import { NS } from '../NetscriptDefinitions';
 
 export async function main(ns: NS) {
-
+    const answer = await ns.prompt("What would you like to do?", { 
+        type: "select",
+        choices: ["Get the available RAM of a server"]
+     });
+    if (answer === "Get the available RAM of a server") {
+        const server = "" + await ns.prompt("What server would you like to know the RAM of?", { type:"text" });
+        ns.tprint("SUCCESS\nThe available RAM of " + server + " is " + getServerRamAvailable(ns, server) + " GB.");
+    }
 }
 
 /**

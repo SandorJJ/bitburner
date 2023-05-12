@@ -1,7 +1,33 @@
 import { NS } from '../NetscriptDefinitions';
+import { getNetwork } from './network';
 
 export async function main(ns: NS) {
+    const answer = await ns.prompt("What would you like to do?", {
+        type: "select",
+        choices: ["Compromise all servers"]
+    })
 
+    if (answer === "Compromise all servers") {
+        const serversToCompromise = getNetwork(ns).filter((server) => !ns.hasRootAccess(server));
+
+        let compromised = 0;
+        for (const server of serversToCompromise) {
+
+            const exitCode = compromiseServer(ns, server);
+            if (exitCode === 0) {
+                compromised++;
+            } else if (exitCode === 2) {
+                ns.tprint("ERROR\n An unexpected error has occured!");
+            }
+        }
+
+        if (compromised === 0) {
+            ns.tprint("No servers were compromised!")
+        } else {
+            ns.tprint("SUCCESS\nSuccessfully compromised " + compromised + " servers!");
+        }
+
+    }
 }
 
 /**

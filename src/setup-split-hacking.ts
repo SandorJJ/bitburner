@@ -14,6 +14,11 @@ export async function main(ns: NS) {
     }
     const threadsPerServer = Math.floor(totalRam / scriptRam / hackableServers.length);
 
+    for (const server of serversWithRam) {
+        ns.scp(script, server, "home");
+    }
+
+
     for (const hackableServer of hackableServers) {
         let threadsLeft = threadsPerServer;
 

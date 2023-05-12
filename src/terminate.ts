@@ -5,7 +5,7 @@ export async function main(ns: NS) {
     const answer = await ns.prompt("Would you like to kill all running scripts?", { type: "boolean" });
     if (answer) {
         killScripts(ns);
-        ns.tprint("Successfully killed all running scripts!");
+        ns.tprint("SUCCESS\nSuccessfully killed all running scripts!");
     }
 }
 
