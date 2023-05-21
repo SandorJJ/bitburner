@@ -1,20 +1,38 @@
 import { NS } from '../NetscriptDefinitions';
 
 export async function main(ns: NS) {
-    const ram = await ns.prompt("What size servers would you like to purchase?", { type: "text" });
-    const amount = await ns.prompt("How many servers would you like to purchase?", { type: "text" });
+    const answer = await ns.prompt("What would you like to do?", { 
+        type: "select" ,
+        choices: ["Purchase servers", "Upgrade servers", "Cost to purchase servers", "Cost to upgrade servers"]
+    });
 
-    const playerMoney = ns.getServerMoneyAvailable("home");
-    const costOfServers = (ns.getPurchasedServerCost(+ram) * +amount)
-    if (playerMoney < costOfServers) {
-        ns.tprint("WARN: You cannot afford to purchase the servers! (" + playerMoney + " < " + costOfServers + ")");
-    } else {
-        purchaseServers(ns, +ram, +amount);
+    const ram = +await ns.prompt("RAM of servers?", {
+        type: "select",
+        choices: ["2", "4", "8", "16", "32", "64", "128", "256", "512", "1024", "2048", "4096", "8192"]
+    });
+
+    const count = +await ns.prompt("Number of servers?", { type: "text" });
+
+    switch (answer) {
+        case "Purchase servers": {
+            
+        }
+        case "Upgrade servers": {
+
+        }
+        case "Cost to purchase servers": {
+
+        }
+        case "Cost to upgrade servers": {
+
+        }
     }
+
+
 }
 
 /**
- * Purchase a certain number of servers of a certain size.
+ * Purchase a certain number of servers of a certain RAM amount.
  * 
  * @param {NS} ns - The Netscript API.
  * @param {number} ram - The size of the server to purchase.
@@ -27,7 +45,7 @@ export function purchaseServers(ns: NS, ram: number, amount: number): void {
 }
 
 /** 
- * Upgraded a list of purchased servers by a certain amount of ram.
+ * Upgraded a list of purchased servers by a certain amount of RAM.
  * 
  * @param {NS} ns - The Netscript API.
  * @param {number} ram - The size to upgrade servers by.
@@ -35,11 +53,12 @@ export function purchaseServers(ns: NS, ram: number, amount: number): void {
  */
 export function upgradePurchasedServers(ns:NS, ram: number, pservs: string[]): void {
     for (let i = 0; i < pservs.length; i++) {
-        ns.upgradePurchasedServer(pservs[i], ram)
+        ns.upgradePurchasedServer(pservs[i], ram);
     }
 }
 
 /**
+ * Returns the cost of buying purchased servers of a certain RAM.
  * 
  * @param {NS} ns - The Netscript API.
  * @param {number} ram - The size of the servers to check the cost of.
@@ -51,6 +70,7 @@ export function purchasedServersCost(ns: NS, ram: number, amount: number): numbe
 }
 
 /**
+ * Returns the cost of upgrading purchased servers to a certain RAM.
  * 
  * @param {NS} ns - The Netscript API.
  * @param {number} ram - The size of the purchased servers to check the cost of.
