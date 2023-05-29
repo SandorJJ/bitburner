@@ -7,7 +7,8 @@ const MAX_NODE_RAM = 64;
 const MAX_NODE_CORES = 16;
 
 export async function main(ns: NS) {
-    if (ns.args.length !== 4) {
+    if (ns.args[0] === "-h" || ns.args[0] === "--help" || ns.args.length !== 4) {
+        printHelpMessage(ns);
         return 1;
     }
 
@@ -75,4 +76,16 @@ function affordCoreUpgrade(ns:NS, node:number): boolean {
 function isNodeMaxed(ns:NS, node:number, level:number, ram:number, cores:number): boolean {
     const nodeStats = ns.hacknet.getNodeStats(node);
     return nodeStats.level === level && nodeStats.ram === ram && nodeStats.cores === cores;
+}
+
+function printHelpMessage(ns: NS) {
+    ns.tprint("\nrun nodes.ts amount levels ram cores" +
+    "\n\nThe script buys hacknet nodes until the given amount is reached, with a certain number of levels, RAM, and cores. " + 
+    "Should the amount of nodes input be less than owned, nothing will happen. " +
+    "Should the number of levels, RAM, or cores be less than the nodes already have, nothing will happen." +
+    "If the number of levels, RAM, or cores exceed their maximum values, nodes will be upgraded to their maximum values." +
+    "\n\namount       The amount of hacknet nodes until the script stops buying more." +
+    "\nlevels       The number of levels to upgrade the nodes to." +
+    "\nram          The amount of ram to upgrade the nodes to." +
+    "\ncores        The number of cores to upgrade the nodes to.");
 }
