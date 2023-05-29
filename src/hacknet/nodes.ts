@@ -11,12 +11,25 @@ export async function main(ns: NS) {
         printHelpMessage(ns);
         return 1;
     }
+    
+    if (!Number.isInteger(ns.args[0]) || !Number.isInteger(ns.args[0]) || !Number.isInteger(ns.args[0]) || !Number.isInteger(ns.args[0])) {
+        printHelpMessage(ns);
+        return 2;
+    }
 
-    // ADD MAX
     const nodesCount = +ns.args[0];
-    const levelOfNodes = +ns.args[1];
-    const ramOfNodes = +ns.args[2];
-    const coresOfNodes = +ns.args[3];
+    let levelOfNodes = +ns.args[1];
+    if (levelOfNodes > MAX_NODE_LEVEL) {
+        levelOfNodes = MAX_NODE_LEVEL;
+    }
+    let ramOfNodes = +ns.args[2];
+    if (ramOfNodes > MAX_NODE_RAM) {
+        ramOfNodes = MAX_NODE_RAM;
+    }
+    let coresOfNodes = +ns.args[3];
+    if (coresOfNodes > MAX_NODE_CORES) {
+        coresOfNodes = MAX_NODE_RAM;
+    }
 
     for (let i = 0; i < nodesCount; i++) {
         if (ns.hacknet.numNodes() < nodesCount) {
