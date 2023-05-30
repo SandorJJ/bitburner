@@ -4,47 +4,51 @@ const SLEEP_TIME = 500;
 const MAX_NODE_LEVEL = 200;
 const MAX_NODE_RAM = 64;
 const MAX_NODE_CORES = 16;
+const OPTIONS = ["-m", "--manual", "-a", "--auto"]
 
 export async function main(ns: NS) {
-    if (ns.args.length !== 4) {
+    if (ns.args.length !== 5) {
         printHelpMessage(ns);
         return 1;
     }
-    
-    if (!Number.isInteger(ns.args[0]) || !Number.isInteger(ns.args[1]) || !Number.isInteger(ns.args[2]) || !Number.isInteger(ns.args[3])) {
+
+    if (!OPTIONS.includes(ns.args[0].toString()) || !Number.isInteger(ns.args[1]) || !Number.isInteger(ns.args[2]) || !Number.isInteger(ns.args[3]) || !Number.isInteger(ns.args[4])) {
         printHelpMessage(ns);
         return 2;
     }
-    
-    const nodesCount = +ns.args[0];
-    let levelOfNodes = +ns.args[1];
-    if (levelOfNodes > MAX_NODE_LEVEL) {
-        levelOfNodes = MAX_NODE_LEVEL;
-    }
-    let ramOfNodes = +ns.args[2];
-    if (ramOfNodes > MAX_NODE_RAM) {
-        ramOfNodes = MAX_NODE_RAM;
-    }
-    let coresOfNodes = +ns.args[3];
-    if (coresOfNodes > MAX_NODE_CORES) {
-        coresOfNodes = MAX_NODE_RAM;
-    }
 
-    for (let i = 0; i < nodesCount; i++) {
-        if (ns.hacknet.numNodes() < nodesCount) {
-            if (ns.hacknet.numNodes() === 0) {
-                ns.hacknet.purchaseNode();
-                continue;
-            }
-            while (isNodeMaxed(ns, ns.hacknet.numNodes() - 1)) {
-                ns.hacknet.purchaseNode();
-                await ns.sleep(SLEEP_TIME);
-            }
+    if (ns.args[0].toString() === "-m" || ns.args[0].toString() === "--manual") {
+        const nodesCount = +ns.args[1];
+        let levelOfNodes = +ns.args[2];
+        if (levelOfNodes > MAX_NODE_LEVEL) {
+            levelOfNodes = MAX_NODE_LEVEL;
         }
-        await upgradeNodeLevelTo(ns, i, levelOfNodes);
-        await upgradeNodeRamTo(ns, i, ramOfNodes);
-        await upgradeNodeCoresTo(ns, i, coresOfNodes);
-    }
+        let ramOfNodes = +ns.args[3];
+        if (ramOfNodes > MAX_NODE_RAM) {
+            ramOfNodes = MAX_NODE_RAM;
+        }
+        let coresOfNodes = +ns.args[4];
+        if (coresOfNodes > MAX_NODE_CORES) {
+            coresOfNodes = MAX_NODE_RAM;
+        }
+    
+        for (let i = 0; i < nodesCount; i++) {
+            if (ns.hacknet.numNodes() < nodesCount) {
+                if (ns.hacknet.numNodes() === 0) {
+                    ns.hacknet.purchaseNode();
+                }
+                while (isNodeMaxed(ns, ns.hacknet.numNodes() - 1, levelOfNodes, ramOfNodes, coresOfNodes)) {
+                    ns.hacknet.purchaseNode();
+                    await ns.sleep(SLEEP_TIME);
+                }
+            }
+            await upgradeNodeLevelTo(ns, i, levelOfNodes);
+            await upgradeNodeRamTo(ns, i, ramOfNodes);
+            await upgradeNodeCoresTo(ns, i, coresOfNodes);
+        }
+    } else {
+        ns.tprint("NOT YET IMPLEMENTED!")
+    }   
 }
 
 /**
@@ -132,15 +136,18 @@ function affordCoreUpgrade(ns:NS, index:number): boolean {
 }
 
 /**
- * Checks whether or not a node is maxed.
+ * Checks whether or not a node is maxed to a specific set of stats.
  * 
  * @param {NS} ns - The Netscript API. 
- * @param {number} index - The index of the node to check if it's maxed or not.
+ * @param {number} index - The index of the node to check max stats against.
+ * @param {number} level - The max level to check level against.
+ * @param {number} ram - The max RAM to check RAM against.
+ * @param {number} cores - The max cores to check cores against.
  * @returns {boolean} Returns true if the node is maxed, false if not.
  */
-function isNodeMaxed(ns:NS, index:number): boolean {
+function isNodeMaxed(ns:NS, index:number, level:number, ram:number, cores:number): boolean {
     const nodeStats = ns.hacknet.getNodeStats(index);
-    return nodeStats.level === MAX_NODE_LEVEL && nodeStats.ram === MAX_NODE_RAM && nodeStats.cores === MAX_NODE_CORES;
+    return nodeStats.level === level && nodeStats.ram === ram && nodeStats.cores === cores;
 }
 
 /**
@@ -149,12 +156,15 @@ function isNodeMaxed(ns:NS, index:number): boolean {
  * @param {NS} ns - The Netscript API.
  */
 function printHelpMessage(ns: NS) {
-    ns.tprint("\nrun nodes.ts amount levels ram cores" +
+    ns.tprint("\nrun nodes.ts type amount levels ram cores" +
     "\n\nThe script buys hacknet nodes until the given amount is reached, with a certain number of levels, RAM, and cores. " + 
     "Should the amount of nodes input be less than owned, nothing will happen. " +
     "Should the number of levels, RAM, or cores be less than the nodes already have, nothing will happen." +
     "If the number of levels, RAM, or cores exceed their maximum values, nodes will be upgraded to their maximum values." +
-    "\n\namount       The amount of hacknet nodes until the script stops buying more." +
+    "\n\ntype       The way for the script to function" +
+    "\n    -m/--manual      Manually set the amount, levels, ram, and cores" +
+    "\n    -a/--auto        Automatically do stuff" +
+    "\namount       The amount of hacknet nodes until the script stops buying more." +
     "\nlevels       The number of levels to upgrade the nodes to." +
     "\nram          The amount of ram to upgrade the nodes to." +
     "\ncores        The number of cores to upgrade the nodes to.");
