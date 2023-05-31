@@ -4,20 +4,15 @@ const SLEEP_TIME = 500;
 const MAX_NODE_LEVEL = 200;
 const MAX_NODE_RAM = 64;
 const MAX_NODE_CORES = 16;
-const OPTIONS = ["-m", "--manual", "-a", "--auto"]
+const OPTIONS = ["-m", "-a"]
 
 export async function main(ns: NS) {
-    if (ns.args.length !== 5) {
-        printHelpMessage(ns);
-        return 1;
-    }
+    if (ns.args[0] === "-m" && ns.args.length === 5) {
+        if (!Number.isInteger(ns.args[1]) || !Number.isInteger(ns.args[2]) || !Number.isInteger(ns.args[3]) || !Number.isInteger(ns.args[4])) {
+            printHelpMessage(ns);
+            return 2;
+        }
 
-    if (!OPTIONS.includes(ns.args[0].toString()) || !Number.isInteger(ns.args[1]) || !Number.isInteger(ns.args[2]) || !Number.isInteger(ns.args[3]) || !Number.isInteger(ns.args[4])) {
-        printHelpMessage(ns);
-        return 2;
-    }
-
-    if (ns.args[0].toString() === "-m" || ns.args[0].toString() === "--manual") {
         const nodesCount = +ns.args[1];
         let levelOfNodes = +ns.args[2];
         if (levelOfNodes > MAX_NODE_LEVEL) {
@@ -46,9 +41,12 @@ export async function main(ns: NS) {
             await upgradeNodeRamTo(ns, i, ramOfNodes);
             await upgradeNodeCoresTo(ns, i, coresOfNodes);
         }
+    } else if (ns.args[0] === "-a" && ns.args.length === 1) {
+
     } else {
-        ns.tprint("NOT YET IMPLEMENTED!")
-    }   
+        printHelpMessage(ns);
+        return 1
+    }  
 }
 
 /**
@@ -168,4 +166,21 @@ function printHelpMessage(ns: NS) {
     "\nlevels       The number of levels to upgrade the nodes to." +
     "\nram          The amount of ram to upgrade the nodes to." +
     "\ncores        The number of cores to upgrade the nodes to.");
+}
+
+function bestInvestmentType(ns: NS) {
+    const nodeCount = ns.hacknet.numNodes;
+
+}
+
+function levelInvestmentReturn(ns: NS) {
+    const nodeCount = +ns.hacknet.numNodes;
+    let index = 0;
+    for (let i = 1; i < nodeCount; i++) {
+        if (ns.hacknet.getNodeStats(i).level < ns.hacknet.getNodeStats(index).level) {
+            index = 1;
+        }
+    }
+
+    return ns.hacknet.getLevelUpgradeCost(index) / ns.hacknet.getNodeStats(index).production + 1.5 * ns.getHacknetMultipliers().;
 }
