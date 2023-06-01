@@ -154,33 +154,15 @@ function isNodeMaxed(ns:NS, index:number, level:number, ram:number, cores:number
  * @param {NS} ns - The Netscript API.
  */
 function printHelpMessage(ns: NS) {
-    ns.tprint("\nrun nodes.ts type amount levels ram cores" +
-    "\n\nThe script buys hacknet nodes until the given amount is reached, with a certain number of levels, RAM, and cores. " + 
+    ns.tprint("\nrun nodes.ts [[-m amount levels ram cores] -a]" +
+    "\n\nThe script either buys hacknet nodes until the given amount is reached, with a certain number of levels, RAM, and cores or automatically buys hacknet nodes." + 
     "Should the amount of nodes input be less than owned, nothing will happen. " +
     "Should the number of levels, RAM, or cores be less than the nodes already have, nothing will happen." +
     "If the number of levels, RAM, or cores exceed their maximum values, nodes will be upgraded to their maximum values." +
-    "\n\ntype       The way for the script to function" +
-    "\n    -m/--manual      Manually set the amount, levels, ram, and cores" +
-    "\n    -a/--auto        Automatically do stuff" +
+    "\n\n    -m/      Manually set the amount, levels, ram, and cores" +
+    "\n    -a/      Automatically do stuff" +
     "\namount       The amount of hacknet nodes until the script stops buying more." +
     "\nlevels       The number of levels to upgrade the nodes to." +
     "\nram          The amount of ram to upgrade the nodes to." +
     "\ncores        The number of cores to upgrade the nodes to.");
-}
-
-function bestInvestmentType(ns: NS) {
-    const nodeCount = ns.hacknet.numNodes;
-
-}
-
-function levelInvestmentReturn(ns: NS) {
-    const nodeCount = +ns.hacknet.numNodes;
-    let index = 0;
-    for (let i = 1; i < nodeCount; i++) {
-        if (ns.hacknet.getNodeStats(i).level < ns.hacknet.getNodeStats(index).level) {
-            index = 1;
-        }
-    }
-
-    return ns.hacknet.getLevelUpgradeCost(index) / ns.hacknet.getNodeStats(index).production + 1.5 * ns.getHacknetMultipliers().;
 }
