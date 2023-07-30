@@ -1,7 +1,7 @@
 import { NS } from "../NetscriptDefinitions";
 
 export async function main(ns: NS) {
-    const servers = network(ns);
+    const servers = getServers(ns);
     servers.forEach((server) => ns.tprintf(server));
 }
 
@@ -12,12 +12,12 @@ export async function main(ns: NS) {
 * @param {set<string>} visited=new set() - The servers that have been visited.
 * @returns {string[]} Returns an array of all the servers.
 */
-export function network(ns: NS, root: string = "home", visited: Set<string> = new Set()): string[] {
+export function getServers(ns: NS, root: string = "home", visited: Set<string> = new Set()): string[] {
     ns.scan(root)
     .filter((child) => !visited.has(child))
     .forEach((child) => {
         visited.add(child);
-        network(ns, child, visited);
+        getServers(ns, child, visited);
     })
 
     return [...visited];

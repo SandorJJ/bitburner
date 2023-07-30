@@ -1,0 +1,22 @@
+import { NS } from "../NetscriptDefinitions";
+import { getServers } from "./network";
+
+export async function main(ns: NS) {
+    if (ns.args.length === 0) {
+        ns.tprintf("WARN: No server entered to hack!");
+        return;
+    }
+
+    const serverToHack = String(ns.args[0]);
+    const script = "hack.js";
+    const scriptRam = ns.getScriptRam(script);
+    const rootAccessServers = getServers(ns).filter((server) => ns.hasRootAccess(server));
+
+    rootAccessServers.forEach((server) => {
+        const serverRam = ns.getServerMaxRam(server);
+        const threads = Math.floor(serverRam / scriptRam);
+        
+        ns.scp(script, server, "home");
+        ns.exec(script, server, threads, serverToHack);
+    });
+}
