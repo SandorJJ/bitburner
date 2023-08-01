@@ -10,13 +10,16 @@ export async function main(ns: NS) {
     const serverToHack = String(ns.args[0]);
     const script = "hack.js";
     const scriptRam = ns.getScriptRam(script);
-    const rootAccessServers = getServers(ns).filter((server) => ns.hasRootAccess(server));
+    const rootAccessServers = getServers(ns).filter((server) => ns.hasRootAccess(server))
+       .filter((server) => ns.getServerMaxRam(server) > scriptRam);
 
-    rootAccessServers.forEach((server) => {
+
+    for (const server of rootAccessServers) {
         const serverRam = ns.getServerMaxRam(server);
         const threads = Math.floor(serverRam / scriptRam);
-        
+
         ns.scp(script, server, "home");
         ns.exec(script, server, threads, serverToHack);
-    });
+        await ns.sleep(15000);
+    }
 }
