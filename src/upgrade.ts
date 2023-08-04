@@ -10,12 +10,26 @@ export async function main(ns: NS) {
     }
 
 
-    const ram = Number(ns.args[1]);
+    const ram = Number(ns.args[0]);
     if (!RAM_AMOUNTS.includes(ram)) {
         ns.tprintf("The RAM of the servers to purchase is incorrect!\n" +
             `Entered: ${ram}, Expected: ${RAM_AMOUNTS}`);
         return 4;
     }
-    
-    ns.getPurchasedServers().forEach((server) => ns.upgradePurchasedServer(server, ram));
+
+    const cost = ns.getPurchasedServers().reduce((total, server) => {
+        const upgradeCost = ns.getPurchasedServerUpgradeCost(server, ram);
+
+        if (upgradeCost === -1) {
+            return total;
+        }
+
+        return total + upgradeCost;
+    }, 0);
+    if (cost > ns.getPlayer().money) {
+        ns.tprintf(`You cannot afford to upgrade servers to ${ram} RAM!\n` +
+                   `Cost: ${cost} > Money: ${Math.floor(ns.getPlayer().money)}`);
+    } else {
+        ns.getPurchasedServers().forEach((server) => ns.upgradePurchasedServer(server, ram));
+    }
 }
