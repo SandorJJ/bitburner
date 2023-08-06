@@ -1,4 +1,4 @@
-import { NS } from "../NetscriptDefinitions";
+import { NS } from "../../NetscriptDefinitions";
 
 const AMOUNT_MIN = 1;
 const AMOUNT_MAX = 25;

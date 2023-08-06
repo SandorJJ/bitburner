@@ -1,5 +1,5 @@
-import { NS } from "../NetscriptDefinitions";
-import { getServers } from "./network";
+import { NS } from "../../NetscriptDefinitions";
+import { getServers } from "../server/network";
 
 const REQUIRED_HACKING_DIVIDER = 2;
 

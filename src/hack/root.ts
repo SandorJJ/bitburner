@@ -1,5 +1,5 @@
-import { NS } from "../NetscriptDefinitions";
-import { getServers } from "./network";
+import { NS } from "../../NetscriptDefinitions";
+import { getServers } from "../server/network";
 
 export async function main(ns: NS) {
     const noRootAccessServers = getServers(ns).filter((server) => !ns.hasRootAccess(server));
