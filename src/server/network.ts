@@ -12,7 +12,7 @@ export async function main(ns: NS) {
 * @param {set<string>} visited=new set() - The servers that have been visited.
 * @returns {string[]} Returns an array of all the servers.
 */
-export function getServers(ns: NS, root: string = "home", visited: Set<string> = new Set()): string[] {
+export function getServers(ns: NS, root: string = "home", visited: Set<string> = new Set(["home"])): string[] {
     ns.scan(root)
     .filter((child) => !visited.has(child))
     .forEach((child) => {
