@@ -7,16 +7,18 @@ export async function main(ns: NS) {
 function network(ns: NS, root: string = "home", indent: number = 0, prefix: string = "", printed: string[] = ["home"]): void {
     ns.tprintf(prefix.slice(0, prefix.length - 1) + generateIndent(indent) + prefix.slice(prefix.length - 1, prefix.length) + root);
 
-    const servers = ns.scan(root).filter((server) => !printed.includes(server)).filter((server) => !ns.getServer(server).purchasedByPlayer);
+    const servers = ns.scan(root)
+        .filter((server) => !printed.includes(server))
+        .filter((server) => !ns.getServer(server).purchasedByPlayer);
     for (let i = 0; i < servers.length; i++) {
         printed.push(servers[i]);
         if (prefix.includes("┣")) {
             prefix = "┃" + prefix;
         }
         if (i === servers.length - 1) {
-            network(ns, servers[i], indent + 1, constructPrefix(indent, prefix.length, "┗"), printed);
+            network(ns, servers[i], indent + 1, constructPrefix(0, prefixLength(prefix), "┗"), printed);
         } else {
-            network(ns, servers[i], indent + 1, constructPrefix(indent, prefix.length, "┣"), printed);
+            network(ns, servers[i], indent + 1, constructPrefix(0, prefixLength(prefix), "┣"), printed);
         }
     }
 }
@@ -34,13 +36,23 @@ function constructPrefix(indent: number, length: number, ending: string): string
     let prefix = "";
     for (let i = 0; i < length; i++) {
         if (prefix.length === 0) {
-            prefix = generateIndent(indent) + "┃";
+            prefix = prefix + generateIndent(indent) + "┃";
         } else {
-            prefix = generateIndent(1) + "┃";
+            prefix = prefix + generateIndent(1) + "┃";
         }
     }
     
     return prefix + ending;
+}
+
+function prefixLength(prefix: string): number {
+    let length = 0;
+    for (let i = 0; i < prefix.length; i++) {
+        if (prefix[i] === "┃") {
+            length++;
+        }
+    }
+    return length;
 }
 
 // function printServers(ns: NS, servers: string[], printed: string[] = ["home"], indent: number = 0): void {
