@@ -1,31 +1,67 @@
 import { NS } from "../../NetscriptDefinitions";
 
+const CONTINUED_CONNECTION = "┣";
+const CORNER_CONNECTION = "┗";
+const SPACE_INDENT = "  ";
+const LINE_INDENT = "┃ ";
+
+const RED = "\u001b[31m";
+const GREEN = "\u001b[32m";
+const CYAN = "\u001b[36m";
+const UNDERLINE = "\u001b[4m";
+const RESET = "\u001b[0m";
+
+const SPECIAL_SERVERS = ["CSEC", "I.I.I.I", "avmnite-02h", "run4theh111z", "The-Cave", "darkweb"];
+
 export async function main(ns: NS) {
     map(ns)
 }
 
-function map(ns: NS, root: string = "home", printed: string[] = [], indentLevel: number = 0, prefix: string = "") {
-    ns.tprintf(createIndent(indentLevel) + prefix + root);
+function map(ns: NS, root: string = "home", printed: string[] = [], prefix: string = "  ") {
+    if (root === "home") {
+        ns.tprintf(CORNER_CONNECTION + UNDERLINE + root + RESET);
+    }
     printed.push(root);
 
     const children = ns.scan(root)
         .filter((child) => !printed.includes(child))
-        .filter((child) => !child.includes("pserv"));
+        .filter((child) => !ns.getServer(child).purchasedByPlayer);
 
     for (let i = 0; i < children.length; i++) {
         if (i === children.length - 1) {
-            map(ns, children[i], printed, indentLevel + 1, "┗");
+            printServerInfo(ns, prefix + CORNER_CONNECTION, children[i]);
+            map(ns, children[i], printed, prefix + SPACE_INDENT);
         } else {
-            map(ns, children[i], printed, indentLevel + 1, "┣");
+            printServerInfo(ns, prefix + CONTINUED_CONNECTION, children[i]);
+            map(ns, children[i], printed, prefix + LINE_INDENT);
         }
     }
 }
 
-function createIndent(level: number): string {
-    let indent = "";
-    for (let i = 0; i < level; i++) {
-        indent += " ";
+function printServerInfo(ns: NS, prefix: string, server: string) {
+    ns.tprintf(prefix.replace(CORNER_CONNECTION, "┃").replace(CONTINUED_CONNECTION, "┃"));
+    
+    let info = server;
+    
+    if (SPECIAL_SERVERS.includes(server) && ns.getServer(server).hasAdminRights) {
+        info = "\u001b[36;4m" + info + RESET;
+    } else {
+        if (SPECIAL_SERVERS.includes(server)) {
+            info = CYAN + info + RESET;
+        }
+
+        if (ns.getServer(server).hasAdminRights) {
+            info = UNDERLINE + info + RESET;
+        }
     }
 
-    return indent;
+
+    const requiredHackingSkill = ns.getServer(server).requiredHackingSkill!;
+    if (requiredHackingSkill < ns.getPlayer().skills.hacking) {
+        info += GREEN + " (" + requiredHackingSkill + ")" + RESET;
+    } else {
+        info += RED + " (" + requiredHackingSkill + ")" + RESET;
+    }
+
+    ns.tprintf(prefix + info);
 }
