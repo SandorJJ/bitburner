@@ -1,6 +1,8 @@
 import { NS } from "../../NetscriptDefinitions";
 import { getServers } from "../server/network";
 
+const SCRIPT = "hack/hack.js";
+
 export async function main(ns: NS) {
     if (ns.args.length === 0) {
         ns.tprintf("WARN: No server entered to hack!");
@@ -8,7 +10,7 @@ export async function main(ns: NS) {
     }
 
     const serverToHack = String(ns.args[0]);
-    const script = "hack.js";
+    const script = SCRIPT;
     const scriptRam = ns.getScriptRam(script);
     const rootAccessServers = getServers(ns).filter((server) => ns.hasRootAccess(server))
        .filter((server) => ns.getServerMaxRam(server) > scriptRam);

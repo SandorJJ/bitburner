@@ -16,7 +16,11 @@ export async function main(ns: NS) {
             target = server;
         }
     });
-
-    ns.tprintf(target);
+    
+    if (target === undefined) {
+        ns.tprintf("n00dles");
+    } else {
+        ns.tprintf(target);
+    }
 }
 
