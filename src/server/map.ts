@@ -55,7 +55,6 @@ function printServerInfo(ns: NS, prefix: string, server: string) {
         }
     }
 
-
     const requiredHackingSkill = ns.getServer(server).requiredHackingSkill!;
     if (requiredHackingSkill < ns.getPlayer().skills.hacking) {
         info += GREEN + " (" + requiredHackingSkill + ")" + RESET;
@@ -63,5 +62,22 @@ function printServerInfo(ns: NS, prefix: string, server: string) {
         info += RED + " (" + requiredHackingSkill + ")" + RESET;
     }
 
+    if (ns.getServer(server).numOpenPortsRequired! <= portOpenersOwned(ns) && !ns.getServer(server).hasAdminRights) {
+        info = "\u001b[33m" + "!!!" + RESET + info;
+    }
+
     ns.tprintf(prefix + info);
+}
+
+function portOpenersOwned(ns: NS): number {
+    let count = 0;
+    
+    const portOpeners = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe", "HTTPWorm.exe", "SQLInject.exe"]
+    for (const opener of portOpeners) {
+        if (ns.fileExists(opener)) {
+            count++;
+        }
+    }
+
+    return count;
 }
