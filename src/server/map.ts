@@ -14,7 +14,18 @@ const RESET = "\u001b[0m";
 const SPECIAL_SERVERS = ["CSEC", "I.I.I.I", "avmnite-02h", "run4theh111z", "The-Cave", "darkweb"];
 
 export async function main(ns: NS) {
-    map(ns)
+    if (ns.args.length != 1) {
+        ns.tprintf("Wrong number of args!");
+        return;
+    }
+
+    if (ns.args[0] === "-m") {
+        map(ns)
+    } else if (ns.args[0] === "-h") {
+        ns.tprintf("help");
+    } else {
+        ns.tprintf("WHAT?");
+    }
 }
 
 function map(ns: NS, root: string = "home", printed: string[] = [], prefix: string = "  ") {
