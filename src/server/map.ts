@@ -1,15 +1,11 @@
 import { NS } from "../../NetscriptDefinitions";
 
+import { RED, GREEN, CYAN, UNDERLINE, RESET } from "../random/style";
+
 const CONTINUED_CONNECTION = "┣";
 const CORNER_CONNECTION = "┗";
 const SPACE_INDENT = "  ";
 const LINE_INDENT = "┃ ";
-
-const RED = "\u001b[31m";
-const GREEN = "\u001b[32m";
-const CYAN = "\u001b[36m";
-const UNDERLINE = "\u001b[4m";
-const RESET = "\u001b[0m";
 
 const SPECIAL_SERVERS = ["CSEC", "I.I.I.I", "avmnite-02h", "run4theh111z", "The-Cave", "darkweb"];
 
