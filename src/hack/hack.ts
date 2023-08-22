@@ -1,25 +1,40 @@
 import { NS } from "../../NetscriptDefinitions";
+import { YELLOW, RESET } from "../random/style";
 
 export async function main(ns: NS) {
-    if (ns.args.length === 0) {
-        ns.tprintf("WARN: No server entered to hack!");
+    if (ns.args.length != 1 && ns.args.length != 2) {
+        ns.tprintf(`${YELLOW}Wrong number of arguments entered!${RESET}`);
         return;
     }
-
-    const serverToHack = String(ns.args[0]);
-    const securityThreshold = ns.getServerMinSecurityLevel(serverToHack) * 1.1;
-    const moneyThreshold = ns.getServerMaxMoney(serverToHack) * 0.90;
-
-    while (true) {
-        if (securityThreshold < ns.getServerSecurityLevel(serverToHack)) {
-            let securityReduced = await ns.weaken(serverToHack);
-            ns.printf(`INFO:\nSecurity reduced: ${securityReduced}`);
-        } else if (moneyThreshold > ns.getServerMoneyAvailable(serverToHack)) {
-            let moneyIncreased = await ns.grow(serverToHack);
-            ns.printf(`WARN:\nMoney increased: ${moneyIncreased}`);
-        } else {
-            let hackedFor = await ns.hack(serverToHack);
-            ns.printf(`ERROR:\nHacked for: ${hackedFor}`);
+    
+    const option = String(ns.args[0]);
+    if (option === "-h" || option === "--help") {
+        ns.tprintf("Hack.ts: grows, weakens, and hacks a target forever.\n" +
+                   "Usage: hack.ts (-h)(-a target)\n" +
+                   "-h    --help        displays help information\n" +
+                   "-a    --hack        start growing, weakening, and hacking the target")
+    } else if (option === "-a" || option === "--hack") {
+        const target = String(ns.args[1]);
+        try {
+            ns.getServerMinSecurityLevel(target);
+        } catch (error) {
+            ns.tprintf(`${YELLOW}Invalid target entered!${RESET}`);
+            return;
         }
+
+        const securityThreshold = ns.getServerMinSecurityLevel(target) * 1.1;
+        const moneyThreshold = ns.getServerMaxMoney(target) * 0.90;
+
+        while (true) {
+            if (securityThreshold < ns.getServerSecurityLevel(target)) {
+                await ns.weaken(target);
+            } else if (moneyThreshold > ns.getServerMoneyAvailable(target)) {
+                await ns.grow(target);
+            } else {
+                await ns.hack(target);
+            }
+        }
+    } else {
+        ns.tprintf(`${YELLOW}Invalid usage!${RESET}`);
     }
 }

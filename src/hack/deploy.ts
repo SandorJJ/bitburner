@@ -21,7 +21,7 @@ export async function main(ns: NS) {
         const threads = Math.floor(serverRam / scriptRam);
 
         ns.scp(script, server, "home");
-        ns.exec(script, server, threads, serverToHack);
+        ns.exec(script, server, threads, "--hack", serverToHack);
         await ns.sleep(15000);
     }
 }
