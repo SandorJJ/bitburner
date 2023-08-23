@@ -4,7 +4,7 @@ import { YELLOW, RESET } from "../random/style";
 export async function main(ns: NS) {
     if (ns.args.length != 1) {
         ns.tprintf(`${YELLOW}Wrong number of arguments entered!${RESET}`);
-        ns.tprintf("Hack.ts: grows, weakens, and hacks a target forever.\n" +
+        ns.tprintf("Hack.ts: weakens, grows, and hacks a target forever.\n" +
                    "Usage: hack.ts target\n" +
                    "target        the server to grow, weaken, and hack")
         return;

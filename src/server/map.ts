@@ -1,6 +1,6 @@
 import { NS } from "../../NetscriptDefinitions";
 
-import { RED, GREEN, CYAN, UNDERLINE, RESET } from "../random/style";
+import { RED, YELLOW, GREEN, CYAN, UNDERLINE, RESET } from "../random/style";
 
 const CONTINUED_CONNECTION = "┣";
 const CORNER_CONNECTION = "┗";
@@ -10,18 +10,7 @@ const LINE_INDENT = "┃ ";
 const SPECIAL_SERVERS = ["CSEC", "I.I.I.I", "avmnite-02h", "run4theh111z", "The-Cave", "darkweb"];
 
 export async function main(ns: NS) {
-    if (ns.args.length != 1) {
-        ns.tprintf("Wrong number of args!");
-        return;
-    }
-
-    if (ns.args[0] === "-m") {
-        map(ns)
-    } else if (ns.args[0] === "-h") {
-        ns.tprintf("help");
-    } else {
-        ns.tprintf("WHAT?");
-    }
+    map(ns);
 }
 
 function map(ns: NS, root: string = "home", printed: string[] = [], prefix: string = "  ") {
@@ -70,7 +59,7 @@ function printServerInfo(ns: NS, prefix: string, server: string) {
     }
 
     if (ns.getServer(server).numOpenPortsRequired! <= portOpenersOwned(ns) && !ns.getServer(server).hasAdminRights) {
-        info = "\u001b[33m" + "!!!" + RESET + info;
+        info = YELLOW + "!!!" + RESET + info;
     }
 
     ns.tprintf(prefix + info);

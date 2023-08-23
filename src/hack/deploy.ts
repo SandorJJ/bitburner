@@ -3,6 +3,7 @@ import { YELLOW, RESET } from "../random/style";
 import { getServers } from "../server/network";
 
 const SCRIPT = "hack/hack.js";
+const SLEEP_TIME = 15000;
 
 export async function main(ns: NS) {
     if (ns.args.length != 1) {
@@ -32,6 +33,6 @@ export async function main(ns: NS) {
 
         ns.scp(SCRIPT, server, "home");
         ns.exec(SCRIPT, server, threads, target);
-        await ns.sleep(15000);
+        await ns.sleep(SLEEP_TIME);
     }
 }

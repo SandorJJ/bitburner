@@ -4,6 +4,15 @@ import { getServers } from "../server/network";
 const REQUIRED_HACKING_DIVIDER = 2;
 
 export async function main(ns: NS) {
+    ns.tprintf(getTarget(ns));
+}
+
+/**
+* Finds the best target to hack.
+* @param {NS} ns - The Netscript API.
+* @returns {string} Returns the target.
+*/
+export function getTarget(ns: NS): string {
     const hackableServers = getServers(ns)
         .filter((server) => server !== "home")
         .filter((server) => !ns.getServer(server).purchasedByPlayer)
@@ -18,9 +27,8 @@ export async function main(ns: NS) {
     });
     
     if (target === undefined) {
-        ns.tprintf("n00dles");
-    } else {
-        ns.tprintf(target);
+        target = "n00dles";
     }
-}
 
+    return target;
+}
