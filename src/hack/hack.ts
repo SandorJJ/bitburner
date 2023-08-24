@@ -10,7 +10,7 @@ export async function main(ns: NS) {
         return;
     }
     
-    const target = String(ns.args[1]);
+    const target = String(ns.args[0]);
     try {
         ns.getServerMinSecurityLevel(target);
     } catch (error) {

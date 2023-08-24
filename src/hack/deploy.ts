@@ -3,6 +3,7 @@ import { YELLOW, RESET } from "../random/style";
 import { getServers } from "../server/network";
 
 const SCRIPT = "hack/hack.js";
+const DEPENDENCIES = ["random/style.js"];
 const SLEEP_TIME = 15000;
 
 export async function main(ns: NS) {
@@ -28,10 +29,11 @@ export async function main(ns: NS) {
 
 
     for (const server of rootAccessServers) {
-        const serverRam = ns.getServerMaxRam(server);
+        const serverRam = ns.getServerMaxRam(server) - ns.getServerUsedRam(server);
         const threads = Math.floor(serverRam / scriptRam);
 
         ns.scp(SCRIPT, server, "home");
+        ns.scp(DEPENDENCIES, server, "home");
         ns.exec(SCRIPT, server, threads, target);
         await ns.sleep(SLEEP_TIME);
     }
